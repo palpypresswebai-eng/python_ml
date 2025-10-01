@@ -1,0 +1,8 @@
+2025-09-22 12:05:52 - arthmaticapp - DEBUG - adding 5+5=10
+2025-09-22 12:05:52 - arthmaticapp - DEBUG - adding 5-5 = 0
+2025-09-22 12:05:52 - arthmaticapp - DEBUG - adding 5*5=25
+2025-09-22 12:05:52 - arthmaticapp - DEBUG - dividing 10/5= 2.0
+2025-09-22 12:09:37 - arthmaticapp - DEBUG - adding 5+5=10
+2025-09-22 12:09:37 - arthmaticapp - DEBUG - adding 5-5 = 0
+2025-09-22 12:09:37 - arthmaticapp - DEBUG - adding 5*5=25
+2025-09-22 12:09:37 - arthmaticapp - ERROR - divide by zero error

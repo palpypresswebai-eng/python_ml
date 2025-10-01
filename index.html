@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color Picker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Custom styles for range sliders */
+
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 10px;
+        border-radius: 5px;
+        background: #e2e8f0;
+        outline: none;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ffffff;
+        cursor: pointer;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+
+      input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ffffff;
+        cursor: pointer;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+
+      #hue-slider {
+        background: linear-gradient(
+          to right,
+          #f00,
+          #ff0,
+          #0f0,
+          #0ff,
+          #00f,
+          #f0f,
+          #f00
+        );
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-100 flex items-start justify-start min-h-screen p-16">
+    <div class="bg-gray-200 p-8 rounded-xl shadow-lg">
+      <div class="relative pt-12">
+        <!-- The floating dropper button -->
+        <button
+          id="main-dropper-button"
+          class="absolute -top-5 left-0 w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-900 transition-colors z-20"
+        >
+          <img src="Color Picker.svg" />
+        </button>
+
+        <!-- Color Picker Card -->
+        <div class="w-80 bg-white rounded-2xl shadow-2xl p-4 space-y-4">
+          <!-- Color selection area -->
+          <div
+            id="color-picker"
+            class="w-full h-48 rounded-lg cursor-crosshair relative"
+            style="background-color: hsl(100, 100%, 50%)"
+          >
+            <div
+              class="absolute inset-0 rounded-lg"
+              style="
+                background-image: linear-gradient(to right, white, transparent);
+              "
+            ></div>
+            <div
+              class="absolute inset-0 rounded-lg"
+              style="
+                background-image: linear-gradient(to top, black, transparent);
+              "
+            ></div>
+            <div
+              id="picker-handle"
+              class="w-5 h-5 rounded-full border-2 border-white shadow-md absolute"
+              style="top: 25%; left: 75%"
+            ></div>
+          </div>
+
+          <!-- Sliders and Dropper -->
+          <div class="flex items-center space-x-3">
+            <button
+              id="inline-dropper-button"
+              class="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center shadow-sm border border-gray-200"
+              style="background-color: #42cb14"
+            >
+              <img src="Color Picker.svg" alt="Dropper Icon" />
+            </button>
+            <div class="w-full space-y-3">
+              <input
+                type="range"
+                id="hue-slider"
+                min="0"
+                max="360"
+                value="100"
+              />
+              <input
+                type="range"
+                id="alpha-slider"
+                min="0"
+                max="100"
+                value="100"
+              />
+            </div>
+          </div>
+
+          <!-- Color Inputs -->
+          <div class="flex items-center space-x-2">
+            <div class="relative">
+              <select
+                id="color-format"
+                class="appearance-none bg-gray-100 border border-gray-200 rounded-md py-2 pl-3 pr-8 text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <option>HEX</option>
+                <option>RGB</option>
+                <option>HSL</option>
+              </select>
+              <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+              >
+                <svg
+                  class="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <input
+              id="color-input"
+              type="text"
+              value="#42CB14"
+              class="w-full bg-gray-100 border border-gray-200 rounded-md p-2 text-center text-sm font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              id="alpha-input"
+              type="text"
+              value="100%"
+              class="w-20 bg-gray-100 border border-gray-200 rounded-md p-2 text-center text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <!-- Color Palette -->
+          <div class="grid grid-cols-8 gap-2 pt-2">
+            <div
+              class="palette-color w-full aspect-square rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500"
+              style="background-color: #000000"
+            ></div>
+            <div
+              class="palette-color w-full aspect-square rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500"
+              style="background-color: #adb5bd"
+            ></div>
+            <div
+              class="palette-color w-full aspect-square rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500"
+              style="background-color: #e63946"
+            ></div>
+            <div
+              class="palette-color w-full aspect-square rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500"
+              style="background-color: #fca311"
+            ></div>
+            <div
+              class="palette-color w-full aspect-square rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500"
+              style="background-color: #f2e205"
+            ></div>
+            <div
+              class="palette-color w-full aspect-square rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500"
+              style="background-color: #42cb14"
+            ></div>
+            <div
+              class="palette-color w-full aspect-square rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500"
+              style="background-color: #0077b6"
+            ></div>
+            <div
+              class="palette-color w-full aspect-square rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500"
+              style="background-color: #7209b7"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const colorPicker = document.getElementById("color-picker");
+        const pickerHandle = document.getElementById("picker-handle");
+        const hueSlider = document.getElementById("hue-slider");
+        const alphaSlider = document.getElementById("alpha-slider");
+        const colorInput = document.getElementById("color-input");
+        const alphaInput = document.getElementById("alpha-input");
+        const inlineDropperButton = document.getElementById(
+          "inline-dropper-button"
+        );
+        const mainDropperButton = document.getElementById(
+          "main-dropper-button"
+        );
+        const colorFormat = document.getElementById("color-format");
+        const paletteColors = document.querySelectorAll(".palette-color");
+
+        let hue = 100;
+        let saturation = 80; // Corresponds to 75% left
+        let lightness = 50; // Corresponds to 25% top
+        let alpha = 1;
+
+        let isDragging = false;
+
+        // --- Core Functions ---
+
+        function updateColor() {
+          // Update picker background for hue
+          const pureHueColor = `hsl(${hue}, 100%, 50%)`;
+          colorPicker.style.backgroundColor = pureHueColor;
+
+          // Calculate final color based on all values
+          const hslaColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+          const rgbaColor = hslaToRgba(hue, saturation, lightness, alpha);
+          const hexColor = rgbaToHex(rgbaColor.r, rgbaColor.g, rgbaColor.b);
+
+          // Update UI elements
+          updateColorInput(
+            hexColor,
+            rgbaColor,
+            hslaColor.replace("hsla", "hsl").slice(0, -5) + ")"
+          );
+          inlineDropperButton.style.backgroundColor = hslaColor;
+          mainDropperButton.style.backgroundColor = hslaColor; // This line was added
+          alphaInput.value = `${Math.round(alpha * 100)}%`;
+
+          // Update alpha slider background
+          const alphaGradient = `linear-gradient(to right, transparent, ${pureHueColor})`;
+          alphaSlider.style.background = alphaGradient;
+
+          // Update picker handle position
+          const pickerWidth = colorPicker.offsetWidth;
+          const pickerHeight = colorPicker.offsetHeight;
+          const handleSize = pickerHandle.offsetWidth;
+
+          // Convert current HSL color to HSV to correctly map to the picker's X/Y coordinates
+          const hsv = hslToHsv(hue, saturation, lightness);
+
+          // Map HSV saturation (x-axis) and value (y-axis) to the handle's top-left position
+          const left = (hsv.s / 100) * (pickerWidth - handleSize);
+          const top = ((100 - hsv.v) / 100) * (pickerHeight - handleSize);
+
+          pickerHandle.style.left = `${left}px`;
+          pickerHandle.style.top = `${top}px`;
+        }
+
+        function updateColorInput(hex, rgba, hsl) {
+          const format = colorFormat.value;
+          if (format === "HEX") {
+            colorInput.value = hex.toUpperCase();
+          } else if (format === "RGB") {
+            colorInput.value = `rgb(${rgba.r}, ${rgba.g}, ${rgba.b})`;
+          } else if (format === "HSL") {
+            colorInput.value = hsl;
+          }
+        }
+
+        function handlePickerDrag(e) {
+          if (!isDragging) return;
+          const rect = colorPicker.getBoundingClientRect();
+          const handleSize = pickerHandle.offsetWidth;
+          const pickerWidth = colorPicker.offsetWidth;
+          const pickerHeight = colorPicker.offsetHeight;
+
+          // Position of the click relative to the picker area
+          let x = e.clientX - rect.left;
+          let y = e.clientY - rect.top;
+
+          // We want the handle's CENTER to be at the click position.
+          // So, calculate the top-left position for the handle.
+          let handleX = x - handleSize / 2;
+          let handleY = y - handleSize / 2;
+
+          // Constrain the handle's top-left position to stay within the valid area
+          const validWidth = pickerWidth - handleSize;
+          const validHeight = pickerHeight - handleSize;
+
+          handleX = Math.max(0, Math.min(validWidth, handleX));
+          handleY = Math.max(0, Math.min(validHeight, handleY));
+
+          // Now, calculate the color values from the constrained handle position
+          // Use a check to prevent division by zero if picker has no size
+          const newSaturation =
+            validWidth > 0 ? (handleX / validWidth) * 100 : 0;
+          const newValue =
+            validHeight > 0 ? 100 - (handleY / validHeight) * 100 : 0;
+
+          // The saturation from the x-axis is for HSV, not HSL directly.
+          // We get the new color based on hue, new saturation (for HSV), and new value.
+          const { s, l } = hsvToHsl(hue, newSaturation, newValue);
+
+          saturation = s;
+          lightness = l;
+
+          updateColor();
+        }
+
+        // --- Event Listeners ---
+
+        colorPicker.addEventListener("mousedown", (e) => {
+          isDragging = true;
+          handlePickerDrag(e);
+        });
+        document.addEventListener("mousemove", handlePickerDrag);
+        document.addEventListener("mouseup", () => {
+          isDragging = false;
+        });
+
+        // Touch events for mobile
+        colorPicker.addEventListener(
+          "touchstart",
+          (e) => {
+            isDragging = true;
+            handlePickerDrag(e.touches[0]);
+          },
+          {
+            passive: false,
+          }
+        );
+        document.addEventListener(
+          "touchmove",
+          (e) => {
+            if (isDragging) handlePickerDrag(e.touches[0]);
+          },
+          {
+            passive: false,
+          }
+        );
+        document.addEventListener("touchend", () => {
+          isDragging = false;
+        });
+
+        hueSlider.addEventListener("input", (e) => {
+          hue = e.target.value;
+          updateColor();
+        });
+
+        alphaSlider.addEventListener("input", (e) => {
+          alpha = e.target.value / 100;
+          updateColor();
+        });
+
+        colorFormat.addEventListener("change", () => {
+          updateColor();
+        });
+
+        paletteColors.forEach((colorDiv) => {
+          colorDiv.addEventListener("click", () => {
+            const color = colorDiv.style.backgroundColor;
+            const rgba = parseRgb(color);
+            const { h, s, l } = rgbToHsl(rgba.r, rgba.g, rgba.b);
+
+            hue = h;
+            saturation = s;
+            lightness = l;
+            alpha = rgba.a !== undefined ? rgba.a : 1;
+
+            hueSlider.value = hue;
+            alphaSlider.value = alpha * 100;
+
+            updateColor();
+          });
+        });
+
+        // Eyedropper API
+        const setupEyedropper = (button) => {
+          button.addEventListener("click", () => {
+            if (!window.EyeDropper) {
+              alert("Your browser doesn't support the EyeDropper API.");
+              return;
+            }
+
+            const eyeDropper = new EyeDropper();
+            eyeDropper
+              .open()
+              .then((result) => {
+                const color = result.sRGBHex;
+                const rgba = hexToRgba(color);
+                const { h, s, l } = rgbToHsl(rgba.r, rgba.g, rgba.b);
+
+                hue = h;
+                saturation = s;
+                lightness = l;
+                alpha = rgba.a;
+
+                hueSlider.value = h;
+                alphaSlider.value = a * 100;
+
+                updateColor();
+              })
+              .catch((e) => {
+                console.log("EyeDropper was cancelled.");
+              });
+          });
+        };
+
+        setupEyedropper(inlineDropperButton);
+        setupEyedropper(mainDropperButton);
+
+        // --- Color Conversion Utilities ---
+        // These are standard algorithms for color space conversion.
+        function hslaToRgba(h, s, l, a) {
+          s /= 100;
+          l /= 100;
+          let c = (1 - Math.abs(2 * l - 1)) * s,
+            x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
+            m = l - c / 2,
+            r = 0,
+            g = 0,
+            b = 0;
+          if (0 <= h && h < 60) {
+            r = c;
+            g = x;
+            b = 0;
+          } else if (60 <= h && h < 120) {
+            r = x;
+            g = c;
+            b = 0;
+          } else if (120 <= h && h < 180) {
+            r = 0;
+            g = c;
+            b = x;
+          } else if (180 <= h && h < 240) {
+            r = 0;
+            g = x;
+            b = c;
+          } else if (240 <= h && h < 300) {
+            r = x;
+            g = 0;
+            b = c;
+          } else if (300 <= h && h <= 360) {
+            r = c;
+            g = 0;
+            b = x;
+          }
+          r = Math.round((r + m) * 255);
+          g = Math.round((g + m) * 255);
+          b = Math.round((b + m) * 255);
+          return {
+            r,
+            g,
+            b,
+            a,
+          };
+        }
+
+        function rgbaToHex(r, g, b) {
+          return (
+            "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+          );
+        }
+
+        function rgbToHsl(r, g, b) {
+          r /= 255;
+          g /= 255;
+          b /= 255;
+          const max = Math.max(r, g, b),
+            min = Math.min(r, g, b);
+          let h,
+            s,
+            l = (max + min) / 2;
+          if (max == min) {
+            h = s = 0;
+          } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+              case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+              case g:
+                h = (b - r) / d + 2;
+                break;
+              case b:
+                h = (r - g) / d + 4;
+                break;
+            }
+            h /= 6;
+          }
+          return {
+            h: Math.round(h * 360),
+            s: Math.round(s * 100),
+            l: Math.round(l * 100),
+          };
+        }
+
+        function hsvToHsl(h, s, v) {
+          s /= 100;
+          v /= 100;
+          let l = v * (1 - s / 2);
+          let newS = l === 0 || l === 1 ? 0 : (v - l) / Math.min(l, 1 - l);
+          return {
+            h: h,
+            s: Math.round(newS * 100),
+            l: Math.round(l * 100),
+          };
+        }
+
+        function hslToHsv(h, s, l) {
+          s /= 100;
+          l /= 100;
+          let v = l + s * Math.min(l, 1 - l);
+          let newS = v === 0 ? 0 : 2 * (1 - l / v);
+          return {
+            h: h,
+            s: Math.round(newS * 100),
+            v: Math.round(v * 100),
+          };
+        }
+
+        function hexToRgba(hex) {
+          let c;
+          if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+            c = hex.substring(1).split("");
+            if (c.length == 3) {
+              c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+            }
+            c = "0x" + c.join("");
+            return {
+              r: (c >> 16) & 255,
+              g: (c >> 8) & 255,
+              b: c & 255,
+              a: 1,
+            };
+          }
+          throw new Error("Bad Hex");
+        }
+
+        function parseRgb(rgbString) {
+          const result = rgbString.match(/(\d+)/g);
+          return result
+            ? {
+                r: parseInt(result[0]),
+                g: parseInt(result[1]),
+                b: parseInt(result[2]),
+                a: 1,
+              }
+            : null;
+        }
+
+        // Initialize
+        updateColor();
+      });
+    </script>
+  </body>
+</html>
